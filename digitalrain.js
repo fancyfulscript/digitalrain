@@ -4,8 +4,12 @@ window.addEventListener('load', initApp);
 function initApp(event) {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
+
+    const div = document.getElementById("content");
+
+    const style = window.getComputedStyle(div);
+    ctx.canvas.width = parseInt(style.width.split('px')[0]);
+    ctx.canvas.height = parseInt(style.height.split('px')[0]);
     const h = ctx.canvas.height;
     const w = ctx.canvas.width;
 
