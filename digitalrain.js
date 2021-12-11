@@ -35,7 +35,7 @@ function initApp(event) {
         // console.log(`KeyboardEvent: key='${event.key}' | code='${event.code}'`);
         if (event.code == "Space") {
             if (frames.id != 0) frames.joint();
-            else frames.run(render.bind(this));
+            else frames.run(render.bind(this), 0);
         }
     }, true);
 }
@@ -53,13 +53,13 @@ EngineRenderer.prototype.time = 0;
 EngineRenderer.prototype.delta = 0;
 EngineRenderer.prototype.timeRef = 0
 
-EngineRenderer.prototype.run = function (callback) {
+EngineRenderer.prototype.run = function (callback, timestamp) {
+
     cancelAnimationFrame(this.id);
-    this.time = Date.now();
-    this.delta = this.time - this.timeRef;
+    this.delta = timestamp - this.timeRef;
 
     if (this.delta > this.trigger) {
-        this.timeRef = this.time - (this.delta % this.trigger);
+        this.timeRef = timestamp - (this.delta % this.trigger);
         callback();
     }
     this.id = requestAnimationFrame(this.run.bind(this, callback));
