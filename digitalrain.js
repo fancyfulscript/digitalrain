@@ -15,7 +15,7 @@ function initApp(event) {
 
     const animation = new FrameAnimation(w, h);
     animation.initialize();
-    const frames = new FrameManager(30);
+    const frames = new EngineRenderer(30);
 
     function render() {
         ctx.fillStyle = 'black';
@@ -41,19 +41,19 @@ function initApp(event) {
 }
 
 /********************************************************
- *    FrameManager : requestAnimationFrame Manager      *
+ *    EngineRenderer : requestAnimationFrame Manager     *
  ********************************************************/
-function FrameManager(fps) {
+function EngineRenderer(fps) {
     this.fps = fps;
     this.trigger = 1000 / fps;
 }
 
-FrameManager.prototype.id = 0;
-FrameManager.prototype.time = 0;
-FrameManager.prototype.delta = 0;
-FrameManager.prototype.timeRef = 0
+EngineRenderer.prototype.id = 0;
+EngineRenderer.prototype.time = 0;
+EngineRenderer.prototype.delta = 0;
+EngineRenderer.prototype.timeRef = 0
 
-FrameManager.prototype.run = function (callback) {
+EngineRenderer.prototype.run = function (callback) {
     cancelAnimationFrame(this.id);
     this.time = Date.now();
     this.delta = this.time - this.timeRef;
@@ -65,7 +65,7 @@ FrameManager.prototype.run = function (callback) {
     this.id = requestAnimationFrame(this.run.bind(this, callback));
 }
 
-FrameManager.prototype.joint = function () {
+EngineRenderer.prototype.joint = function () {
     cancelAnimationFrame(this.id);
     this.id = 0;
 }
@@ -91,7 +91,7 @@ FrameAnimation.prototype.initialize = function () {
     this.stride = Math.round(this.w / this.fontSize);
 
     for (let index = 0; index < this.stride; index++)
-        this.buffer.push(new RainDrop(this.length, this.fontSize, index));
+        this.buffer.push(new GlyphColumn(this.length, this.fontSize, index));
 }
 
 FrameAnimation.prototype.render = function (ctx) {
@@ -100,9 +100,9 @@ FrameAnimation.prototype.render = function (ctx) {
 }
 
 /********************************
- *     RainDrop : glyph column  *
+ *  
  ********************************/
-function RainDrop(length, fontSize, colNum) {
+function GlyphColumn(length, fontSize, colNum) {
 
     this.fontSize = fontSize;
     this.index = colNum;
@@ -110,7 +110,7 @@ function RainDrop(length, fontSize, colNum) {
     this.initialize();
 }
 
-RainDrop.prototype.initialize = function () {
+GlyphColumn.prototype.initialize = function () {
     this.buffer = [];
     this.lifeCycle = Math.random() * 400;
     this.frame = 0;
@@ -122,7 +122,7 @@ RainDrop.prototype.initialize = function () {
     }
 }
 
-RainDrop.prototype.render = function (ctx) {
+GlyphColumn.prototype.render = function (ctx) {
 
     if (this.frame < this.lifeCycle) this.buffer.forEach(elt => elt.render(ctx));
     else {
